@@ -1,2 +1,1 @@
-# cli
-UMI device management CLI.
+# UMI Device Management CLI
