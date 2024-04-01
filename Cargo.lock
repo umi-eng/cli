@@ -252,7 +252,8 @@ checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
 [[package]]
 name = "hftwo"
 version = "0.1.0"
-source = "git+https://github.com/umi-eng/hftwo.git#5b2c9c48e77e3605252f2385e3d4ab2ae182d0d1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3fde7178de11b3f33593340cf2e5170f8ce87605d2eac7c2e95ce9473f60023"
 dependencies = [
  "crc",
  "zerocopy",
@@ -628,7 +629,8 @@ dependencies = [
 [[package]]
 name = "uftwo"
 version = "0.1.0"
-source = "git+https://github.com/umi-eng/uftwo.git#bddd551fd755fe9900667116cc8cffceaab06ff0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "109eda49349dc3324960834923104bd317e6260b0e944665dc17d0cbc719ae88"
 dependencies = [
  "bitflags 2.5.0",
  "num",
