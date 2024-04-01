@@ -48,6 +48,7 @@ impl Cmd {
 }
 
 #[derive(Debug)]
+#[allow(unused)]
 enum ModbusSlave {
     System = 1,
     Network = 2,
@@ -99,14 +100,17 @@ async fn dashboard(mut output: impl std::io::Write, ip: IpAddr) -> anyhow::Resul
     Ok(())
 }
 
+#[allow(unused_variables, unused_mut)]
 async fn update(mut output: impl std::io::Write) -> anyhow::Result<()> {
     todo!();
 }
 
+#[allow(unused_variables, unused_mut)]
 async fn restart(mut output: impl std::io::Write) -> anyhow::Result<()> {
     todo!();
 }
 
+#[allow(unused_variables, unused_mut)]
 async fn reset(mut output: impl std::io::Write) -> anyhow::Result<()> {
     todo!();
 }
