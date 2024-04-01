@@ -6,10 +6,10 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
+hftwo = "0.1.0"
+uftwo = "0.1.0"
 anyhow = "1.0.81"
 clap = { version = "4.5.2", features = ["derive"] }
-hftwo = "0.1.0"
 open = "5.1.2"
 tokio = { version = "1.37.0", features = ["full"] }
 tokio-modbus = "0.11.0"
-uftwo = "0.1.0"
