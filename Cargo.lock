@@ -251,9 +251,9 @@ checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
 
 [[package]]
 name = "hftwo"
-version = "0.1.0"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3fde7178de11b3f33593340cf2e5170f8ce87605d2eac7c2e95ce9473f60023"
+checksum = "df0a51dadca75343abc466e62c3490dec5b041cccf0f7c31c2474a66081cc362"
 dependencies = [
  "crc",
  "zerocopy",
