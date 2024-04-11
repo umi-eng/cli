@@ -1,5 +1,3 @@
-#![deny(unused)]
-
 mod gateway;
 
 use clap::{Parser, Subcommand};
