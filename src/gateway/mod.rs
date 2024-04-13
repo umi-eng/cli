@@ -20,16 +20,16 @@ use uftwo::Block;
 
 #[derive(Subcommand)]
 pub enum Commands {
-    // Show important status information
-    // Status,
-    // Open web dashboard in default browser
-    // Dashboard,
+    /// Show important status information
+    Status,
+    /// Open web dashboard in default browser
+    Dashboard,
     /// Perform a firmware update
     Update(UpdateOptions),
-    // Restart a gateway
-    // Restart,
-    // Reset a gateway to default configuration
-    // Reset,
+    /// Restart a gateway
+    Restart,
+    /// Reset a gateway to default configuration
+    Reset,
 }
 
 #[derive(Parser)]
@@ -46,14 +46,14 @@ impl Cmd {
         let output = std::io::stdout().lock();
 
         let socket_addr = SocketAddr::new(self.ip, 502);
-        // let ctx = connect(socket_addr).await?;
+        let ctx = connect(socket_addr).await?;
 
         match self.subcommand {
-            // Commands::Status => status(output, ctx).await,
-            // Commands::Dashboard => dashboard(output, self.ip).await,
+            Commands::Status => status(output, ctx).await,
+            Commands::Dashboard => dashboard(output, self.ip).await,
             Commands::Update(options) => update(output, options, self.ip).await,
-            // Commands::Restart => restart(output).await,
-            // Commands::Reset => reset(output).await,
+            Commands::Restart => restart(output).await,
+            Commands::Reset => reset(output).await,
         }
     }
 }
