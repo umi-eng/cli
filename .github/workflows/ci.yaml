@@ -9,7 +9,7 @@ jobs:
   ci:
     name: CI
     runs-on: ubuntu-latest
-    needs: [check]
+    needs: [check, format, clippy]
     if: always()
     steps:
       - name: Done
