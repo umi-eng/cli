@@ -16,9 +16,18 @@ jobs:
         run: jq --exit-status 'all(.result == "success")' <<< '${{ toJson(needs) }}'
 
   check:
-    runs-on: ubuntu-latest
+    name: Check
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-14
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
+
       - name: Cache Cargo registry and index
         uses: actions/cache@v4
         with:
@@ -26,10 +35,15 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+
       - name: Cache Cargo build
         uses: actions/cache@v4
         with:
           path: target
           key: ${{ runner.os }}-target-${{ hashFiles('**/Cargo.toml') }}
-      - uses: dtolnay/rust-toolchain@stable
-      - run: cargo build --verbose --release
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run Cargo check
+        run: cargo check --locked
