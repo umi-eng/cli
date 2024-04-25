@@ -144,7 +144,7 @@ async fn update(
     // read first block
     // later we'll use this to read extension tags for important metadata
     let mut block_buf = [0; 512];
-    file.read(&mut block_buf).await?;
+    let _ = file.read(&mut block_buf).await?;
     let first_block = match Block::from_bytes_ref(&block_buf) {
         Ok(b) => b,
         Err(err) => {
@@ -184,14 +184,14 @@ async fn update(
                 };
 
                 // send block to gateway
-                stream.write(&block_buf).await?;
+                let _ = stream.write(&block_buf).await?;
 
                 if block.block_number == 0 {
                     writeln!(output, "Erasing.")?;
                 }
 
                 let mut response = [0; 3];
-                stream.read(&mut response).await?;
+                let _ = stream.read(&mut response).await?;
 
                 if &response == b"ok\0" {
                     continue;
