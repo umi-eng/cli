@@ -66,9 +66,9 @@ enum ModbusSlave {
     Canbus = 3,
 }
 
-impl Into<Slave> for ModbusSlave {
-    fn into(self) -> Slave {
-        Slave(self as u8)
+impl From<ModbusSlave> for Slave {
+    fn from(value: ModbusSlave) -> Self {
+        Slave(value as u8)
     }
 }
 
