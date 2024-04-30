@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # workaround for cargo release issue: https://github.com/crate-ci/cargo-release/issues/625
+
+      - name: Install cargo-release
+        run: |
+          curl -LsSf https://github.com/crate-ci/cargo-release/releases/download/v0.24.8/cargo-release-v0.24.8-x86_64-unknown-linux-gnu.tar.gz | tar xzf - -C ${CARGO_HOME:-~/.cargo}/bin
+
+      - name: Extract crate version
+        id: crate_version
+        run: |
+          VERSION=$(cargo pkgid -p umi | cut -d# -f2 | cut -d: -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Release to crates.io
+        run: |
+          git checkout main
+
+          cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+          cargo release publish --no-confirm --execute
+
+          cargo release tag --no-confirm --execute --sign-tag --tag-prefix ""
+
+          cargo release push --no-confirm --execute --tag-prefix ""
