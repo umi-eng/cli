@@ -30,6 +30,8 @@ jobs:
       - name: Release to crates.io
         run: |
           git checkout main
+          git config --global user.email "robot@umi.engineering"
+          git config --global user.name "Universal Machine Intelligence"
 
           cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
