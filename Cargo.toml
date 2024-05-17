@@ -1,6 +1,6 @@
 [package]
 name = "umi"
-description = "UMI device management CLI tool"
+description = "UMI device management tool."
 documentation = "https://docs.rs/crate/umi/"
 homepage = "https://umi.engineering/cli"
 repository = "https://github.com/umi-eng/cli"

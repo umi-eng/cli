@@ -9,6 +9,7 @@ pub enum Commands {
 }
 
 #[derive(Parser)]
+#[command(about, version)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
