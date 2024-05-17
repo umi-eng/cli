@@ -5,7 +5,7 @@ documentation = "https://docs.rs/crate/umi/"
 homepage = "https://umi.engineering/cli"
 repository = "https://github.com/umi-eng/cli"
 license = "MPL-2.0"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2021"
 
 [dependencies]
