@@ -250,6 +250,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: "umi-eng/cli"
+          ref: "main"
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
       # So we have access to the formula
       - name: Fetch homebrew formulae
