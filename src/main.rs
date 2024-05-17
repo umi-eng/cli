@@ -9,7 +9,6 @@ pub enum Commands {
 }
 
 #[derive(Parser)]
-#[clap(name = "UMI")]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
