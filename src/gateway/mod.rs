@@ -22,8 +22,6 @@ use uftwo::Block;
 pub enum Commands {
     /// Show important status information
     Status,
-    /// Open web dashboard in default browser
-    Dashboard,
     /// Perform a firmware update
     Update(UpdateOptions),
     /// Restart a gateway
@@ -50,7 +48,6 @@ impl Cmd {
 
         match self.subcommand {
             Commands::Status => status(output, ctx).await,
-            Commands::Dashboard => dashboard(output, self.ip).await,
             Commands::Update(options) => update(output, options, self.ip).await,
             Commands::Restart => restart(output).await,
             Commands::Reset => reset(output).await,
@@ -102,17 +99,6 @@ async fn status(
         "Got status in {} seconds.",
         start.elapsed().as_secs_f64()
     )?;
-
-    Ok(())
-}
-
-async fn dashboard(
-    mut output: impl std::io::Write,
-    ip: IpAddr,
-) -> anyhow::Result<()> {
-    let url = format!("http://{}:80", ip);
-    writeln!(output, "Opening dashboard: {}", url)?;
-    open::that(url)?;
 
     Ok(())
 }
