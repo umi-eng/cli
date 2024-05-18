@@ -11,13 +11,8 @@ use tokio::{
     fs::File,
     io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt, BufReader},
     net::TcpStream,
-    time::Instant,
 };
-use tokio_modbus::{
-    client::{tcp::connect, Context as ModbusContext, Reader},
-    slave::SlaveContext,
-    Slave,
-};
+use tokio_modbus::client::tcp::connect;
 use uftwo::Block;
 
 #[derive(Subcommand)]
