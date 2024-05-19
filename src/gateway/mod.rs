@@ -1,3 +1,5 @@
+mod reset;
+mod restart;
 mod status;
 mod update;
 
@@ -41,8 +43,8 @@ impl Cmd {
             Commands::Update(options) => {
                 update::command(output, options, self.ip).await
             }
-            Commands::Restart => restart(output).await,
-            Commands::Reset => reset(output).await,
+            Commands::Restart => restart::command(output).await,
+            Commands::Reset => reset::command(output).await,
         }
     }
 }
@@ -55,14 +57,4 @@ pub struct UpdateOptions {
     /// Update to a specific version.
     #[clap(long)]
     version: Option<String>,
-}
-
-#[allow(unused_variables, unused_mut)]
-async fn restart(mut output: impl std::io::Write) -> anyhow::Result<()> {
-    todo!();
-}
-
-#[allow(unused_variables, unused_mut)]
-async fn reset(mut output: impl std::io::Write) -> anyhow::Result<()> {
-    todo!();
 }
