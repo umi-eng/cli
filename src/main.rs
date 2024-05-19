@@ -1,4 +1,5 @@
 mod gateway;
+mod manifest;
 
 use clap::{Parser, Subcommand};
 
