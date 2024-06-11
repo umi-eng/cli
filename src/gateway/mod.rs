@@ -8,7 +8,7 @@ use std::{
     net::{IpAddr, SocketAddr},
     path::PathBuf,
 };
-use tokio_modbus::client::tcp::connect;
+use tokio_modbus::{client::tcp::connect, slave::SlaveContext, Slave};
 
 #[derive(Subcommand)]
 pub enum Commands {
@@ -36,14 +36,16 @@ impl Cmd {
         let output = std::io::stdout().lock();
 
         let socket_addr = SocketAddr::new(self.ip, 502);
-        let ctx = connect(socket_addr).await?;
+        let mut ctx = connect(socket_addr).await?;
+
+        ctx.set_slave(Slave(0));
 
         match self.subcommand {
             Commands::Status => status::command(output, ctx).await,
             Commands::Update(options) => {
                 update::command(output, options, self.ip).await
             }
-            Commands::Restart => restart::command(output).await,
+            Commands::Restart => restart::command(output, ctx).await,
             Commands::Reset => reset::command(output).await,
         }
     }
