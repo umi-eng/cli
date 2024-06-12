@@ -42,9 +42,6 @@ pub async fn command(
         firmware_version[0], firmware_version[1], firmware_version[2]
     )?;
 
-    let uptime = u16_words_to_u32(&ctx.read_holding_registers(7, 2).await?)?;
-    writeln!(output, "Uptime: {} seconds", uptime)?;
-
     writeln!(
         output,
         "Got status in {} seconds.",
