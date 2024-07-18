@@ -1,15 +1,18 @@
+use super::connect_modbus;
 use crate::write_with_header;
 use colored::Colorize;
-use std::time::Instant;
-use tokio_modbus::client::{Context as ModbusContext, Reader};
+use std::{net::IpAddr, time::Instant};
+use tokio_modbus::client::Reader;
 
 pub async fn command(
     mut output: impl std::io::Write,
-    mut ctx: ModbusContext,
+    ip: IpAddr,
 ) -> anyhow::Result<()> {
+    let mut modbus = connect_modbus(ip).await?;
+
     let start = Instant::now();
 
-    let hardware_version = ctx.read_holding_registers(1, 3).await?;
+    let hardware_version = modbus.read_holding_registers(1, 3).await?;
     write_with_header(
         &mut output,
         "Hardware Version".green(),
@@ -19,7 +22,7 @@ pub async fn command(
         ),
     );
 
-    let firmware_version = ctx.read_holding_registers(4, 3).await?;
+    let firmware_version = modbus.read_holding_registers(4, 3).await?;
     write_with_header(
         &mut output,
         "Firmware Version".green(),

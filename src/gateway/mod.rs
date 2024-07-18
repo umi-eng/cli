@@ -7,7 +7,11 @@ use std::{
     net::{IpAddr, SocketAddr},
     path::PathBuf,
 };
-use tokio_modbus::{client::tcp::connect, slave::SlaveContext, Slave};
+use tokio_modbus::{
+    client::{tcp::connect, Context},
+    slave::SlaveContext,
+    Slave,
+};
 
 #[derive(Subcommand)]
 pub enum Commands {
@@ -30,18 +34,14 @@ pub struct Cmd {
 impl Cmd {
     pub async fn run(self) -> anyhow::Result<()> {
         // so we can log to files later.
-        let mut output = std::io::stdout();
-
-        let socket_addr = SocketAddr::new(self.ip, 502);
-        let mut ctx = connect(socket_addr).await?;
-        ctx.set_slave(Slave(1));
+        let output = std::io::stdout();
 
         match self.subcommand {
-            Commands::Status => status::command(&mut output, ctx).await,
+            Commands::Status => status::command(output, self.ip).await,
             Commands::Update(options) => {
                 update::command(output, options, self.ip).await
             }
-            Commands::Restart => restart::command(output, ctx).await,
+            Commands::Restart => restart::command(output, self.ip).await,
         }
     }
 }
@@ -54,4 +54,10 @@ pub struct UpdateOptions {
     /// Update to a specific version.
     #[clap(long)]
     version: Option<String>,
+}
+
+pub async fn connect_modbus(ip: IpAddr) -> Result<Context, std::io::Error> {
+    let mut ctx = connect(SocketAddr::new(ip, 502)).await?;
+    ctx.set_slave(Slave(1));
+    Ok(ctx)
 }
