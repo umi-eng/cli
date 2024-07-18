@@ -30,24 +30,24 @@ impl Manifest {
     ///
     /// Note this will return `None` if the version specified as latest is not
     /// in the map of binaries.
-    pub fn latest(&self) -> Option<&FirmwareBinary> {
-        self.binaries.get(&self.latest)
+    pub fn latest(&self) -> Option<(&String, &FirmwareBinary)> {
+        self.binaries.get_key_value(&self.latest)
     }
 
     /// Return the metadata for the stable firmware binary.
     ///
     /// Note this will return `None` if the version specified as stable is not
     /// in the map of binaries.
-    pub fn stable(&self) -> Option<&FirmwareBinary> {
-        self.binaries.get(&self.stable)
+    pub fn stable(&self) -> Option<(&String, &FirmwareBinary)> {
+        self.binaries.get_key_value(&self.stable)
     }
 
     /// The metadata for a specific firmware binary version.
     ///
     /// Note this will return `None` if the version specified is not in the map
     /// of binaries.
-    pub fn version(&self, ver: &str) -> Option<&FirmwareBinary> {
-        self.binaries.get(ver)
+    pub fn version(&self, ver: &str) -> Option<(&String, &FirmwareBinary)> {
+        self.binaries.get_key_value(ver)
     }
 
     /// Returns the map of firmware binaries.

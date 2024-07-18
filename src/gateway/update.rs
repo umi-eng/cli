@@ -105,7 +105,7 @@ pub async fn command(
         .json::<Manifest>()
         .await?;
 
-        let firmware_binary = if let Some(version) = options.version {
+        let firmware = if let Some(version) = options.version {
             match manifest.version(&version) {
                 Some(fw) => fw,
                 None => {
@@ -126,8 +126,9 @@ pub async fn command(
             }
         };
 
-        let binary =
-            reqwest::get(firmware_binary.file()).await?.bytes().await?;
+        writeln!(output, "Version: {}.", firmware.0)?;
+
+        let binary = reqwest::get(firmware.1.file()).await?.bytes().await?;
 
         upgrade_firmware(output, ip, &binary).await?;
     }
