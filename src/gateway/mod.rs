@@ -1,4 +1,3 @@
-mod reset;
 mod restart;
 mod status;
 mod update;
@@ -18,8 +17,6 @@ pub enum Commands {
     Update(UpdateOptions),
     /// Restart a gateway
     Restart,
-    /// Reset a gateway to default configuration
-    Reset,
 }
 
 #[derive(Parser)]
@@ -45,7 +42,6 @@ impl Cmd {
                 update::command(output, options, self.ip).await
             }
             Commands::Restart => restart::command(output, ctx).await,
-            Commands::Reset => reset::command(output).await,
         }
     }
 }
