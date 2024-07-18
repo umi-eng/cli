@@ -28,8 +28,7 @@ async fn upgrade_firmware(
 
     // open TCP connection to UF2 endpoint
     writeln!(output, "Connecting to gateway.")?;
-    const PORT: u16 = 0x5546; // firmware update port ("UF" in ASCII)
-    let mut stream = TcpStream::connect(SocketAddr::new(ip, PORT)).await?;
+    let mut stream = TcpStream::connect(SocketAddr::new(ip, 21830)).await?;
 
     writeln!(output, "Starting firmware upgrade.")?;
 
