@@ -33,7 +33,7 @@ pub struct Cmd {
 impl Cmd {
     pub async fn run(self) -> anyhow::Result<()> {
         // so we can log to files later.
-        let output = std::io::stdout().lock();
+        let mut output = std::io::stdout();
 
         let socket_addr = SocketAddr::new(self.ip, 502);
         let mut ctx = connect(socket_addr).await?;
@@ -41,7 +41,7 @@ impl Cmd {
         ctx.set_slave(Slave(0));
 
         match self.subcommand {
-            Commands::Status => status::command(output, ctx).await,
+            Commands::Status => status::command(&mut output, ctx).await,
             Commands::Update(options) => {
                 update::command(output, options, self.ip).await
             }

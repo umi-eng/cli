@@ -1,3 +1,5 @@
+use crate::write_with_header;
+use colored::Colorize;
 use std::time::Duration;
 use tokio_modbus::client::{Context as ModbusContext, Writer};
 
@@ -6,7 +8,7 @@ pub async fn command(
     mut output: impl std::io::Write,
     mut ctx: ModbusContext,
 ) -> anyhow::Result<()> {
-    writeln!(output, "Resetting gateway...")?;
+    write_with_header(&mut output, "Restarting".green(), " ");
 
     // write reset coil
     let _ = tokio::time::timeout(
@@ -15,7 +17,7 @@ pub async fn command(
     )
     .await;
 
-    writeln!(output, "Done")?;
+    write_with_header(&mut output, "Done".green(), " ");
 
     Ok(())
 }

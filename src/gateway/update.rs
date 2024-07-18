@@ -1,6 +1,8 @@
 use super::UpdateOptions;
 use crate::manifest::Manifest;
+use crate::write_with_header;
 use anyhow::Error;
+use colored::Colorize;
 use std::io::Cursor;
 use std::net::IpAddr;
 use std::net::SocketAddr;
@@ -14,8 +16,6 @@ async fn upgrade_firmware(
     ip: IpAddr,
     binary: &[u8],
 ) -> anyhow::Result<()> {
-    writeln!(output, "Starting firmware update.")?;
-
     if binary.len() % 512 != 0 {
         return Err(Error::msg(
             "Failed to read firmware file: firmware file did not align to 512 byte block.",
@@ -27,10 +27,7 @@ async fn upgrade_firmware(
     let mut uf2 = BufReader::new(cursor);
 
     // open TCP connection to UF2 endpoint
-    writeln!(output, "Connecting to gateway.")?;
     let mut stream = TcpStream::connect(SocketAddr::new(ip, 21830)).await?;
-
-    writeln!(output, "Starting firmware upgrade.")?;
 
     let mut block_buf = [0; 512];
 
@@ -57,7 +54,11 @@ async fn upgrade_firmware(
                 let _ = stream.write(&block_buf).await?;
 
                 if block.block_number == 0 {
-                    writeln!(output, "Erasing.")?;
+                    write_with_header(&mut output, "Erasing".green(), "...");
+                }
+
+                if block.block_number == 1 {
+                    write_with_header(&mut output, "Loading".green(), "...");
                 }
 
                 let mut response = [0; 3];
@@ -76,7 +77,7 @@ async fn upgrade_firmware(
         }
     }
 
-    writeln!(output, "Finished.")?;
+    write_with_header(&mut output, "Done".green(), " ");
 
     Ok(())
 }
@@ -96,7 +97,7 @@ pub async fn command(
 
         upgrade_firmware(output, ip, &contents).await?;
     } else {
-        writeln!(output, "Getting firmware.")?;
+        write_with_header(&mut output, "Downloading".green(), " ");
 
         let manifest = reqwest::get(
             "https://cdn.umi.engineering/firmware/gateway/manifest.json",
@@ -126,7 +127,11 @@ pub async fn command(
             }
         };
 
-        writeln!(output, "Version: {}.", firmware.0)?;
+        write_with_header(
+            &mut output,
+            "Version".green(),
+            &format!("{}", firmware.0),
+        );
 
         let binary = reqwest::get(firmware.1.file()).await?.bytes().await?;
 
