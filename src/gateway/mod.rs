@@ -37,8 +37,7 @@ impl Cmd {
 
         let socket_addr = SocketAddr::new(self.ip, 502);
         let mut ctx = connect(socket_addr).await?;
-
-        ctx.set_slave(Slave(0));
+        ctx.set_slave(Slave(1));
 
         match self.subcommand {
             Commands::Status => status::command(&mut output, ctx).await,
