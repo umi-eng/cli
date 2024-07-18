@@ -50,15 +50,3 @@ pub async fn command(
 
     Ok(())
 }
-
-fn u16_words_to_u32(words: &[u16]) -> anyhow::Result<u32> {
-    // construct a u32 from u16's observing network byte order.
-    let uptime: Vec<u8> = words
-        .iter()
-        .flat_map(|&word| vec![word as u8, (word >> 8) as u8])
-        .collect();
-
-    Ok(u32::from_be_bytes([
-        uptime[0], uptime[1], uptime[2], uptime[3],
-    ]))
-}
