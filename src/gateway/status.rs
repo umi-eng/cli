@@ -42,11 +42,7 @@ pub async fn command(
         firmware_version[0], firmware_version[1], firmware_version[2]
     )?;
 
-    writeln!(
-        output,
-        "Got status in {} seconds.",
-        start.elapsed().as_secs_f64()
-    )?;
+    writeln!(output, "Got status in {:?}", start.elapsed())?;
 
     Ok(())
 }
