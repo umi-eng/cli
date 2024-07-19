@@ -16,11 +16,11 @@ use tokio_modbus::{
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Show important status information
+    /// Show status
     Status,
-    /// Perform a firmware update
+    /// Update firmware
     Update(UpdateOptions),
-    /// Restart a gateway
+    /// Command the device to restart
     Restart,
 }
 
