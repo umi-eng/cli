@@ -1,5 +1,5 @@
+use super::manifest::Manifest;
 use super::UpdateOptions;
-use crate::manifest::Manifest;
 use crate::write_with_header;
 use anyhow::Error;
 use colored::Colorize;

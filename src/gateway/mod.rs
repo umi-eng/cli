@@ -1,3 +1,4 @@
+mod manifest;
 mod restart;
 mod status;
 mod update;

@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use serde::Deserialize;
+use std::collections::HashMap;
 
 /// Manifest file format.
 ///
@@ -68,7 +67,6 @@ impl Manifest {
 pub struct FirmwareBinary {
     file: String,
     min: String,
-    sha256: Option<String>,
 }
 
 impl FirmwareBinary {
@@ -80,10 +78,5 @@ impl FirmwareBinary {
     /// Minimum version required to upgrade to this binary.
     pub fn minimum_supported_version(&self) -> &str {
         &self.min
-    }
-
-    /// SHA256 checksum (if included).
-    pub fn sha256(&self) -> Option<&str> {
-        self.sha256.as_deref()
     }
 }
