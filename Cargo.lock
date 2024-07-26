@@ -349,7 +349,7 @@ dependencies = [
 name = "gateway-client"
 version = "0.1.0"
 dependencies = [
- "tokio-modbus 0.14.0",
+ "tokio-modbus",
 ]
 
 [[package]]
@@ -1208,23 +1208,6 @@ dependencies = [
 
 [[package]]
 name = "tokio-modbus"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d99561deee858c4d60b0cb170b67e715f7688c5923c371d2d30c9773ef7d2d8"
-dependencies = [
- "async-trait",
- "byteorder",
- "bytes",
- "futures-core",
- "futures-util",
- "log",
- "smallvec",
- "tokio",
- "tokio-util",
-]
-
-[[package]]
-name = "tokio-modbus"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "033b1b9843d693c3543e6b9c656a566ea45d2564e72ad5447e83233b9e2f3fe1"
@@ -1344,7 +1327,6 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
- "tokio-modbus 0.11.0",
  "uftwo",
 ]
 

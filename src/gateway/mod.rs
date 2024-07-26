@@ -4,15 +4,7 @@ mod status;
 mod update;
 
 use clap::{Parser, Subcommand};
-use std::{
-    net::{IpAddr, SocketAddr},
-    path::PathBuf,
-};
-use tokio_modbus::{
-    client::{tcp::connect, Context},
-    slave::SlaveContext,
-    Slave,
-};
+use std::{net::IpAddr, path::PathBuf};
 
 #[derive(Subcommand)]
 pub enum Commands {
