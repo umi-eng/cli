@@ -18,6 +18,11 @@ impl Client {
         Ok(Self { modbus })
     }
 
+    /// Restart the gateway gracefully
+    pub async fn restart(&mut self) -> Result<()> {
+        self.modbus.write_single_coil(1, true).await
+    }
+
     /// Get hardware version.
     pub async fn hardware_version(&mut self) -> Result<Version> {
         let version = self.modbus.read_holding_registers(1, 3).await?.unwrap();
@@ -36,11 +41,6 @@ impl Client {
             minor: version[1],
             patch: version[2],
         }))
-    }
-
-    /// Restart the gateway gracefully
-    pub async fn restart(&mut self) -> Result<()> {
-        self.modbus.write_single_coil(1, true).await
     }
 }
 
