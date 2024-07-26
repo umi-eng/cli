@@ -56,9 +56,3 @@ pub struct UpdateOptions {
     #[clap(long)]
     version: Option<String>,
 }
-
-pub async fn connect_modbus(ip: IpAddr) -> Result<Context, std::io::Error> {
-    let mut ctx = connect(SocketAddr::new(ip, 502)).await?;
-    ctx.set_slave(Slave(1));
-    Ok(ctx)
-}

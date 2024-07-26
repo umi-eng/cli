@@ -9,6 +9,7 @@ version = "0.0.5"
 edition = "2021"
 
 [dependencies]
+gateway-client = { path = "gateway-client" }
 hftwo = "0.1.2"
 uftwo = "0.1.0"
 anyhow = "1.0.81"
@@ -25,6 +26,9 @@ colored = "2.1.0"
 [profile.dist]
 inherits = "release"
 lto = "thin"
+
+[workspace]
+members = ["gateway-client"]
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]
