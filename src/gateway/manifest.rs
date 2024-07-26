@@ -1,6 +1,14 @@
 use serde::Deserialize;
 use std::collections::HashMap;
 
+/// Manifest schema.
+///
+/// Only deserializes the `schema` field.
+#[derive(Debug, Deserialize)]
+pub struct ManifestSchema {
+    pub schema: String,
+}
+
 /// Manifest file format.
 ///
 /// # Example
@@ -18,44 +26,14 @@ use std::collections::HashMap;
 /// ```
 #[derive(Debug, Deserialize)]
 pub struct Manifest {
-    schema: String,
-    latest: String,
-    stable: String,
-    binaries: HashMap<String, FirmwareBinary>,
-}
-
-impl Manifest {
-    /// Return the metadata for the latest firmware binary.
-    ///
-    /// Note this will return `None` if the version specified as latest is not
-    /// in the map of binaries.
-    pub fn latest(&self) -> Option<(&String, &FirmwareBinary)> {
-        self.binaries.get_key_value(&self.latest)
-    }
-
-    /// Return the metadata for the stable firmware binary.
-    ///
-    /// Note this will return `None` if the version specified as stable is not
-    /// in the map of binaries.
-    pub fn stable(&self) -> Option<(&String, &FirmwareBinary)> {
-        self.binaries.get_key_value(&self.stable)
-    }
-
-    /// The metadata for a specific firmware binary version.
-    ///
-    /// Note this will return `None` if the version specified is not in the map
-    /// of binaries.
-    pub fn version(&self, ver: &str) -> Option<(&String, &FirmwareBinary)> {
-        self.binaries.get_key_value(ver)
-    }
-
-    /// Returns the map of firmware binaries.
-    ///
-    /// Key: version identifier.
-    /// Value: firmware binary metadata.
-    pub fn binaries(&self) -> &HashMap<String, FirmwareBinary> {
-        &self.binaries
-    }
+    /// Schema version.
+    pub schema: String,
+    /// Latest firmware version.
+    pub latest: String,
+    /// Stable firmware version.
+    pub stable: String,
+    /// List of available binaries.
+    pub binaries: HashMap<String, FirmwareBinary>,
 }
 
 /// Metadata for a firmware release binary.
@@ -65,18 +43,8 @@ impl Manifest {
 /// breaking changes.
 #[derive(Debug, Deserialize)]
 pub struct FirmwareBinary {
-    file: String,
-    min: String,
-}
-
-impl FirmwareBinary {
-    /// Firmware binary file URL.
-    pub fn file(&self) -> &str {
-        &self.file
-    }
-
-    /// Minimum version required to upgrade to this binary.
-    pub fn minimum_supported_version(&self) -> &str {
-        &self.min
-    }
+    /// File link.
+    pub file: String,
+    /// Minimum supported version.
+    pub min: String,
 }

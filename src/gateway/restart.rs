@@ -1,7 +1,7 @@
 use crate::write_with_header;
 use colored::Colorize;
 use std::{net::IpAddr, time::Duration};
-use tokio_modbus::client::{Context as ModbusContext, Writer};
+use tokio_modbus::client::Writer;
 
 use super::connect_modbus;
 

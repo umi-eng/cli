@@ -107,7 +107,7 @@ pub async fn command(
         .await?;
 
         let firmware = if let Some(version) = options.version {
-            match manifest.version(&version) {
+            match manifest.binaries.get_key_value(&version) {
                 Some(fw) => fw,
                 None => {
                     return Err(Error::msg(format!(
@@ -117,12 +117,13 @@ pub async fn command(
                 }
             }
         } else {
-            match manifest.stable() {
+            match manifest.binaries.get_key_value(&manifest.stable) {
                 Some(fw) => fw,
                 None => {
-                    return Err(Error::msg(
-                        "Stable firmware version was not found.",
-                    ))
+                    return Err(Error::msg(format!(
+                        "Stable firmware version {} was not found.",
+                        manifest.stable,
+                    )))
                 }
             }
         };
@@ -133,7 +134,7 @@ pub async fn command(
             &format!("{}", firmware.0),
         );
 
-        let binary = reqwest::get(firmware.1.file()).await?.bytes().await?;
+        let binary = reqwest::get(&firmware.1.file).await?.bytes().await?;
 
         upgrade_firmware(output, ip, &binary).await?;
     }
