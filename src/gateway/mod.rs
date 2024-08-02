@@ -7,28 +7,6 @@ mod update;
 use clap::{Parser, Subcommand};
 use std::{net::IpAddr, path::PathBuf};
 
-/// Magic numbers used to identify Gateway types.
-/// Must be u16 to fit in one Modbus register.
-#[derive(Debug, Clone, Copy)]
-enum MagicNumId {
-    /// "FD" like CAN FD
-    CanFd = 0x4644,
-    /// "RS" like RS-232/RS-485
-    Serial = 0x5253,
-}
-
-impl TryFrom<u16> for MagicNumId {
-    type Error = ();
-
-    fn try_from(value: u16) -> Result<Self, Self::Error> {
-        match value {
-            x if x == MagicNumId::CanFd as u16 => Ok(MagicNumId::CanFd),
-            x if x == MagicNumId::Serial as u16 => Ok(MagicNumId::Serial),
-            _ => Err(()),
-        }
-    }
-}
-
 #[derive(Subcommand)]
 pub enum Commands {
     /// Show status

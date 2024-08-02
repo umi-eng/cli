@@ -1,6 +1,6 @@
 use clap::{error, Parser, Subcommand};
 use colored::Colorize;
-use gateway_client::Client;
+use gateway_client::{Client, DeviceIdentifier};
 use std::net::Ipv4Addr;
 
 use crate::write_with_header;
@@ -71,6 +71,15 @@ impl Cmd {
                 Ok(())
             }
             Commands::CanBitrate(can_bitrate) => {
+                match client.device_identifier().await {
+                    Ok(Ok(Ok(DeviceIdentifier::CanFd))) => {}
+                    _ => {
+                        return Err(anyhow::Error::msg(
+                            "Device does not have a CAN interface.",
+                        ));
+                    }
+                }
+
                 if let Some(nominal) = can_bitrate.nominal {
                     // use same as nominal if not specified
                     let data = can_bitrate.data.unwrap_or(nominal);

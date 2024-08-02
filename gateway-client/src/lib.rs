@@ -2,7 +2,7 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use tokio_modbus::{
     client::{tcp::connect, Reader, Writer},
     slave::SlaveContext,
-    Result, Slave,
+    Result as ModbusResult, Slave,
 };
 
 #[derive(Debug)]
@@ -18,13 +18,29 @@ impl Client {
         Ok(Self { modbus })
     }
 
+    /// Get device identifier.
+    pub async fn device_identifier(
+        &mut self,
+    ) -> Result<ModbusResult<DeviceIdentifier>, ()> {
+        let id = self
+            .modbus
+            .read_holding_registers(0, 1)
+            .await
+            .unwrap()
+            .unwrap()[0];
+
+        let id = DeviceIdentifier::try_from(id)?;
+
+        Ok(Ok(Ok(id)))
+    }
+
     /// Restart the gateway gracefully
-    pub async fn restart(&mut self) -> Result<()> {
+    pub async fn restart(&mut self) -> ModbusResult<()> {
         self.modbus.write_single_coil(1, true).await
     }
 
     /// Get hardware version.
-    pub async fn hardware_version(&mut self) -> Result<Version> {
+    pub async fn hardware_version(&mut self) -> ModbusResult<Version> {
         let version = self.modbus.read_holding_registers(1, 3).await?.unwrap();
         Ok(Ok(Version {
             major: version[0],
@@ -34,7 +50,7 @@ impl Client {
     }
 
     /// Get firmware version.
-    pub async fn firmware_version(&mut self) -> Result<Version> {
+    pub async fn firmware_version(&mut self) -> ModbusResult<Version> {
         let version = self.modbus.read_holding_registers(4, 3).await?.unwrap();
         Ok(Ok(Version {
             major: version[0],
@@ -44,18 +60,18 @@ impl Client {
     }
 
     /// Get DHCP enabled.
-    pub async fn dhcp(&mut self) -> Result<bool> {
+    pub async fn dhcp(&mut self) -> ModbusResult<bool> {
         let enabled = self.modbus.read_coils(1001, 1).await?.unwrap();
         Ok(Ok(enabled[0]))
     }
 
     /// Set DHCP enabled.
-    pub async fn set_dhcp(&mut self, enabled: bool) -> Result<()> {
+    pub async fn set_dhcp(&mut self, enabled: bool) -> ModbusResult<()> {
         self.modbus.write_single_coil(1001, enabled).await
     }
 
     /// Get the configured IPv4 address.
-    pub async fn ipv4_address(&mut self) -> Result<Ipv4Addr> {
+    pub async fn ipv4_address(&mut self) -> ModbusResult<Ipv4Addr> {
         let address = self.modbus.read_input_registers(1001, 4).await?.unwrap();
         Ok(Ok(Ipv4Addr::new(
             address[0] as u8,
@@ -66,25 +82,25 @@ impl Client {
     }
 
     /// Set the IPv4 address.
-    pub async fn set_ipv4_address(&mut self, ip: Ipv4Addr) -> Result<()> {
+    pub async fn set_ipv4_address(&mut self, ip: Ipv4Addr) -> ModbusResult<()> {
         let words = ip.octets().map(|o| o as u16);
         self.modbus.write_multiple_registers(1001, &words).await
     }
 
     /// Get CAN bus receive error count.
-    pub async fn canbus_receive_error_count(&mut self) -> Result<u16> {
+    pub async fn canbus_receive_error_count(&mut self) -> ModbusResult<u16> {
         let count = self.modbus.read_input_registers(2001, 1).await?.unwrap();
         Ok(Ok(count[0]))
     }
 
     /// Get CAN bus transmit error count.
-    pub async fn canbus_transmit_error_count(&mut self) -> Result<u16> {
+    pub async fn canbus_transmit_error_count(&mut self) -> ModbusResult<u16> {
         let count = self.modbus.read_input_registers(2002, 1).await?.unwrap();
         Ok(Ok(count[0]))
     }
 
     /// Get the CAN bus nominal rate in bits per second.
-    pub async fn canbus_bitrate_nominal(&mut self) -> Result<u32> {
+    pub async fn canbus_bitrate_nominal(&mut self) -> ModbusResult<u32> {
         let rate = self.modbus.read_holding_registers(2001, 1).await?.unwrap();
         Ok(Ok(rate[0] as u32 * 100))
     }
@@ -93,19 +109,22 @@ impl Client {
     pub async fn set_canbus_bitrate_nominal(
         &mut self,
         rate: u32,
-    ) -> Result<()> {
+    ) -> ModbusResult<()> {
         let rate = (rate / 100) as u16;
         self.modbus.write_single_register(2001, rate).await
     }
 
     /// Get the CAN bus data rate in bits per second.
-    pub async fn canbus_bitrate_data(&mut self) -> Result<u32> {
+    pub async fn canbus_bitrate_data(&mut self) -> ModbusResult<u32> {
         let rate = self.modbus.read_holding_registers(2001, 1).await?.unwrap();
         Ok(Ok(rate[0] as u32 * 100))
     }
 
     /// Set the CAN bus data rate in bits per second.
-    pub async fn set_canbus_bitrate_data(&mut self, rate: u32) -> Result<()> {
+    pub async fn set_canbus_bitrate_data(
+        &mut self,
+        rate: u32,
+    ) -> ModbusResult<()> {
         let rate = (rate / 100) as u16;
         self.modbus.write_single_register(2001, rate).await
     }
@@ -121,5 +140,27 @@ pub struct Version {
 impl std::fmt::Display for Version {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "v{}.{}.{}", self.major, self.minor, self.patch)
+    }
+}
+
+/// Magic numbers used to identify Gateway types.
+/// Must be u16 to fit in one Modbus register.
+#[derive(Debug, Clone, Copy)]
+pub enum DeviceIdentifier {
+    /// "FD" like CAN FD
+    CanFd = 0x4644,
+    /// "RS" like RS-232/RS-485
+    Serial = 0x5253,
+}
+
+impl TryFrom<u16> for DeviceIdentifier {
+    type Error = ();
+
+    fn try_from(value: u16) -> Result<Self, Self::Error> {
+        match value {
+            x if x == Self::CanFd as u16 => Ok(Self::CanFd),
+            x if x == Self::Serial as u16 => Ok(Self::Serial),
+            _ => Err(()),
+        }
     }
 }
