@@ -21,17 +21,11 @@ impl Client {
     /// Get device identifier.
     pub async fn device_identifier(
         &mut self,
-    ) -> Result<ModbusResult<DeviceIdentifier>, ()> {
-        let id = self
-            .modbus
+    ) -> ModbusResult<DeviceIdentifier> {
+        self.modbus
             .read_holding_registers(0, 1)
             .await
-            .unwrap()
-            .unwrap()[0];
-
-        let id = DeviceIdentifier::try_from(id)?;
-
-        Ok(Ok(Ok(id)))
+            .map(|v| v.map(|v| v[0]).map(DeviceIdentifier::from))
     }
 
     /// Restart the gateway gracefully
@@ -148,19 +142,19 @@ impl std::fmt::Display for Version {
 #[derive(Debug, Clone, Copy)]
 pub enum DeviceIdentifier {
     /// "FD" like CAN FD
-    CanFd = 0x4644,
+    CanFd,
     /// "RS" like RS-232/RS-485
-    Serial = 0x5253,
+    Serial,
+    /// Unkown but possibly valid identifier.
+    Unknown(u16),
 }
 
-impl TryFrom<u16> for DeviceIdentifier {
-    type Error = ();
-
-    fn try_from(value: u16) -> Result<Self, Self::Error> {
+impl From<u16> for DeviceIdentifier {
+    fn from(value: u16) -> Self {
         match value {
-            x if x == Self::CanFd as u16 => Ok(Self::CanFd),
-            x if x == Self::Serial as u16 => Ok(Self::Serial),
-            _ => Err(()),
+            x if x == 0x4644 => Self::CanFd,
+            x if x == 0x5253 => Self::Serial,
+            _ => Self::Unknown(value),
         }
     }
 }

@@ -71,8 +71,8 @@ impl Cmd {
                 Ok(())
             }
             Commands::CanBitrate(can_bitrate) => {
-                match client.device_identifier().await {
-                    Ok(Ok(Ok(DeviceIdentifier::CanFd))) => {}
+                match client.device_identifier().await?? {
+                    DeviceIdentifier::CanFd => {}
                     _ => {
                         return Err(anyhow::Error::msg(
                             "Device does not have a CAN interface.",
