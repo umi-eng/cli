@@ -1,3 +1,4 @@
+mod config;
 mod manifest;
 mod restart;
 mod status;
@@ -36,6 +37,8 @@ pub enum Commands {
     Update(UpdateOptions),
     /// Command the device to restart
     Restart,
+    /// Read and write configuration
+    Config(config::Cmd),
 }
 
 #[derive(Parser)]
@@ -57,6 +60,7 @@ impl Cmd {
                 update::command(output, options, self.ip).await
             }
             Commands::Restart => restart::command(output, self.ip).await,
+            Commands::Config(command) => command.run(output, self.ip).await,
         }
     }
 }
