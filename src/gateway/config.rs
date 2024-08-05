@@ -108,8 +108,8 @@ impl Cmd {
                         ));
                     }
 
-                    client.set_canbus_bitrate_nominal(data / 100).await??;
-                    client.set_canbus_bitrate_data(data / 100).await??;
+                    client.set_canbus_bitrate_nominal(data).await??;
+                    client.set_canbus_bitrate_data(data).await??;
 
                     writeln!(output, "Done")?;
                 } else {
