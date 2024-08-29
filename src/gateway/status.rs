@@ -12,6 +12,12 @@ pub async fn command(
 
     write_with_header(
         &mut output,
+        "Serial".green(),
+        &format!("{}", client.serial().await??),
+    );
+
+    write_with_header(
+        &mut output,
         "Hardware Version".green(),
         &format!("{}", client.hardware_version().await??),
     );

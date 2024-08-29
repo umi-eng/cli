@@ -1,4 +1,7 @@
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::{
+    fmt::Display,
+    net::{IpAddr, Ipv4Addr, SocketAddr},
+};
 use tokio_modbus::{
     client::{tcp::connect, Reader, Writer},
     slave::SlaveContext,
@@ -55,6 +58,17 @@ impl Client {
             major: version[0],
             minor: version[1],
             patch: version[2],
+        }))
+    }
+
+    /// Get serial number.
+    pub async fn serial(&mut self) -> ModbusResult<Serial> {
+        let serial = self.modbus.read_holding_registers(7, 2).await?.unwrap();
+
+        Ok(Ok(Serial {
+            year: serial[0].to_le_bytes()[1],
+            week: serial[0].to_le_bytes()[0],
+            seq: serial[1],
         }))
     }
 
@@ -126,6 +140,19 @@ impl Client {
     ) -> ModbusResult<()> {
         let rate = (rate / 100) as u16;
         self.modbus.write_single_register(2001, rate).await
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct Serial {
+    pub year: u8,
+    pub week: u8,
+    pub seq: u16,
+}
+
+impl Display for Serial {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:02}{:02}-{:04X}", self.year, self.week, self.seq)
     }
 }
 
