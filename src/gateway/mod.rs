@@ -1,5 +1,6 @@
 mod config;
 mod manifest;
+mod reset;
 mod restart;
 mod status;
 mod update;
@@ -13,7 +14,9 @@ pub enum Commands {
     Status,
     /// Update firmware
     Update(UpdateOptions),
-    /// Command the device to restart
+    /// Reset all configuration
+    Reset,
+    /// Restart
     Restart,
     /// Read and write configuration
     Config(config::Cmd),
@@ -37,6 +40,7 @@ impl Cmd {
             Commands::Update(options) => {
                 update::command(output, options, self.ip).await
             }
+            Commands::Reset => reset::command(output, self.ip).await,
             Commands::Restart => restart::command(output, self.ip).await,
             Commands::Config(command) => command.run(output, self.ip).await,
         }

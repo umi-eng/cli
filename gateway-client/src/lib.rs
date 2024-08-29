@@ -33,6 +33,11 @@ impl Client {
         self.modbus.write_single_coil(1, true).await
     }
 
+    /// Reset the gateway to factory defaults
+    pub async fn reset(&mut self) -> ModbusResult<()> {
+        self.modbus.write_single_coil(2, true).await
+    }
+
     /// Get hardware version.
     pub async fn hardware_version(&mut self) -> ModbusResult<Version> {
         let version = self.modbus.read_holding_registers(1, 3).await?.unwrap();
