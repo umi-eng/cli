@@ -10,8 +10,8 @@ pub async fn command(
 ) -> anyhow::Result<()> {
     let mut client = gateway_client::Client::connect(ip).await?;
 
-    write_with_header(&mut output, "Restarting".green(), " ");
-    let _ = timeout(Duration::from_secs(1), client.restart()).await;
+    write_with_header(&mut output, "Resetting".green(), " ");
+    let _ = timeout(Duration::from_secs(1), client.reset()).await;
     write_with_header(&mut output, "Done".green(), " ");
 
     Ok(())

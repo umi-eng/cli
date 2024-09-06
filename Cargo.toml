@@ -9,13 +9,13 @@ version = "0.0.5"
 edition = "2021"
 
 [dependencies]
+gateway-client = { path = "gateway-client" }
 hftwo = "0.1.2"
 uftwo = "0.1.0"
 anyhow = "1.0.81"
 clap = { version = "4.5.2", features = ["derive"] }
 open = "5.1.2"
 tokio = { version = "1.37.0", features = ["full", "net"] }
-tokio-modbus = "0.11.0"
 reqwest = { version = "0.12.4", features = ["json"] }
 serde_json = "1.0.117"
 serde = { version = "1.0.202", features = ["derive"] }
@@ -25,6 +25,9 @@ colored = "2.1.0"
 [profile.dist]
 inherits = "release"
 lto = "thin"
+
+[workspace]
+members = ["gateway-client"]
 
 # Config for 'cargo dist'
 [workspace.metadata.dist]

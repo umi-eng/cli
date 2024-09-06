@@ -93,7 +93,7 @@ pub async fn command(
         let meta = file.metadata().await?;
 
         let mut contents = vec![0; meta.len() as usize];
-        file.read(&mut contents).await?;
+        let _ = file.read(&mut contents).await?;
 
         upgrade_firmware(output, ip, &contents).await?;
     } else {
@@ -128,11 +128,7 @@ pub async fn command(
             }
         };
 
-        write_with_header(
-            &mut output,
-            "Version".green(),
-            &format!("{}", firmware.0),
-        );
+        write_with_header(&mut output, "Version".green(), firmware.0);
 
         let binary = reqwest::get(&firmware.1.file).await?.bytes().await?;
 

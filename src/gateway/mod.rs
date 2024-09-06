@@ -1,18 +1,12 @@
+mod config;
 mod manifest;
+mod reset;
 mod restart;
 mod status;
 mod update;
 
 use clap::{Parser, Subcommand};
-use std::{
-    net::{IpAddr, SocketAddr},
-    path::PathBuf,
-};
-use tokio_modbus::{
-    client::{tcp::connect, Context},
-    slave::SlaveContext,
-    Slave,
-};
+use std::{net::IpAddr, path::PathBuf};
 
 #[derive(Subcommand)]
 pub enum Commands {
@@ -20,8 +14,12 @@ pub enum Commands {
     Status,
     /// Update firmware
     Update(UpdateOptions),
-    /// Command the device to restart
+    /// Reset all configuration
+    Reset,
+    /// Restart
     Restart,
+    /// Read and write configuration
+    Config(config::Cmd),
 }
 
 #[derive(Parser)]
@@ -42,7 +40,9 @@ impl Cmd {
             Commands::Update(options) => {
                 update::command(output, options, self.ip).await
             }
+            Commands::Reset => reset::command(output, self.ip).await,
             Commands::Restart => restart::command(output, self.ip).await,
+            Commands::Config(command) => command.run(output, self.ip).await,
         }
     }
 }
@@ -55,10 +55,4 @@ pub struct UpdateOptions {
     /// Update to a specific version.
     #[clap(long)]
     version: Option<String>,
-}
-
-pub async fn connect_modbus(ip: IpAddr) -> Result<Context, std::io::Error> {
-    let mut ctx = connect(SocketAddr::new(ip, 502)).await?;
-    ctx.set_slave(Slave(1));
-    Ok(ctx)
 }

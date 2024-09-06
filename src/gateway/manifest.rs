@@ -5,6 +5,7 @@ use std::collections::HashMap;
 ///
 /// Only deserializes the `schema` field.
 #[derive(Debug, Deserialize)]
+#[allow(unused)]
 pub struct ManifestSchema {
     pub schema: String,
 }
@@ -25,6 +26,7 @@ pub struct ManifestSchema {
 /// }
 /// ```
 #[derive(Debug, Deserialize)]
+#[allow(unused)]
 pub struct Manifest {
     /// Schema version.
     pub schema: String,
@@ -42,6 +44,7 @@ pub struct Manifest {
 /// so devices can step-up to the latest firmware without issues due to
 /// breaking changes.
 #[derive(Debug, Deserialize)]
+#[allow(unused)]
 pub struct FirmwareBinary {
     /// File link.
     pub file: String,
