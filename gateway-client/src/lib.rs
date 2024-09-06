@@ -184,8 +184,8 @@ pub enum DeviceIdentifier {
 impl From<u16> for DeviceIdentifier {
     fn from(value: u16) -> Self {
         match value {
-            x if x == 0x4644 => Self::CanFd,
-            x if x == 0x5253 => Self::Serial,
+            0x4644 => Self::CanFd,
+            0x5253 => Self::Serial,
             _ => Self::Unknown(value),
         }
     }
