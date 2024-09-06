@@ -128,7 +128,7 @@ pub async fn command(
             }
         };
 
-        write_with_header(&mut output, "Version".green(), &firmware.0);
+        write_with_header(&mut output, "Version".green(), firmware.0);
 
         let binary = reqwest::get(&firmware.1.file).await?.bytes().await?;
 
