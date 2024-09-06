@@ -93,7 +93,7 @@ pub async fn command(
         let meta = file.metadata().await?;
 
         let mut contents = vec![0; meta.len() as usize];
-        file.read(&mut contents).await?;
+        let _ = file.read(&mut contents).await?;
 
         upgrade_firmware(output, ip, &contents).await?;
     } else {
