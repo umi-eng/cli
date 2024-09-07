@@ -8,7 +8,7 @@ pub async fn command(
     mut output: impl std::io::Write,
     ip: IpAddr,
 ) -> anyhow::Result<()> {
-    let mut client = gateway_client::Client::connect(ip).await?;
+    let mut client = super::client::Client::connect(ip).await?;
 
     write_with_header(&mut output, "Resetting".green(), " ");
     let _ = timeout(Duration::from_secs(1), client.reset()).await;

@@ -1,3 +1,4 @@
+mod client;
 mod config;
 mod manifest;
 mod reset;

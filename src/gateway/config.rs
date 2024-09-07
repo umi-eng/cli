@@ -1,6 +1,6 @@
+use super::client::{Client, DeviceIdentifier};
 use clap::{error, Parser, Subcommand};
 use colored::Colorize;
-use gateway_client::{Client, DeviceIdentifier};
 use std::net::Ipv4Addr;
 
 use crate::write_with_header;

@@ -346,13 +346,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "gateway-client"
-version = "0.1.0"
-dependencies = [
- "tokio-modbus",
-]
-
-[[package]]
 name = "gimli"
 version = "0.28.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1320,13 +1313,13 @@ dependencies = [
  "anyhow",
  "clap",
  "colored",
- "gateway-client",
  "hftwo",
  "open",
  "reqwest",
  "serde",
  "serde_json",
  "tokio",
+ "tokio-modbus",
  "uftwo",
 ]
 
