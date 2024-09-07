@@ -155,7 +155,7 @@ mod tests {
 
     #[test]
     fn custom_parse() {
-        assert_eq!(parse_enable("enable").unwrap(), true);
-        assert_eq!(parse_enable("disable").unwrap(), false);
+        assert!(parse_enable("enable").unwrap());
+        assert!(!parse_enable("disable").unwrap());
     }
 }
