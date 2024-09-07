@@ -9,7 +9,7 @@ version = "0.0.7"
 edition = "2021"
 
 [dependencies]
-gateway-client = { path = "gateway-client" }
+gateway-client = { version = "0.1.0", path = "gateway-client" }
 hftwo = "0.1.2"
 uftwo = "0.1.0"
 anyhow = "1.0.81"
