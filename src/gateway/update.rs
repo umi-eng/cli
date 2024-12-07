@@ -41,7 +41,7 @@ async fn upgrade_firmware(
                     ));
                 }
 
-                let block = match Block::from_bytes_ref(&block_buf) {
+                let block = match Block::from_bytes(&block_buf) {
                     Ok(b) => b,
                     Err(_err) => {
                         return Err(Error::msg(
@@ -53,11 +53,11 @@ async fn upgrade_firmware(
                 // send block to gateway
                 let _ = stream.write(&block_buf).await?;
 
-                if block.block_number == 0 {
+                if block.block == 0 {
                     write_with_header(&mut output, "Erasing".green(), "...");
                 }
 
-                if block.block_number == 1 {
+                if block.block == 1 {
                     write_with_header(&mut output, "Loading".green(), "...");
                 }
 
