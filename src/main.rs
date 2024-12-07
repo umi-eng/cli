@@ -1,4 +1,6 @@
+mod adapter;
 mod gateway;
+mod http;
 
 use clap::{Parser, Subcommand};
 use colored::ColoredString;
@@ -7,6 +9,8 @@ use colored::ColoredString;
 pub enum Commands {
     /// Commands for managing Gateway devices
     Gateway(gateway::Cmd),
+    /// Commands for managing Adapter devices
+    Adapter(adapter::Cmd),
 }
 
 #[derive(Parser)]
@@ -21,9 +25,9 @@ async fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
 
     match args.command {
-        Commands::Gateway(command) => command.run(),
+        Commands::Gateway(command) => command.run().await,
+        Commands::Adapter(command) => command.run().await,
     }
-    .await
 }
 
 fn write_with_header(

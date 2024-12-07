@@ -20,6 +20,8 @@ serde_json = "1.0.117"
 serde = { version = "1.0.202", features = ["derive"] }
 colored = "2.1.0"
 tokio-modbus = "0.14.0"
+dfu-nusb = "0.1.1"
+nusb = "0.1.12"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
