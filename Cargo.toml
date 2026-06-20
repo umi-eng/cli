@@ -2,7 +2,6 @@
 name = "umi"
 description = "UMI device management tool."
 documentation = "https://docs.rs/crate/umi/"
-homepage = "https://umi.engineering/cli"
 repository = "https://github.com/umi-eng/cli"
 license = "MPL-2.0"
 version = "0.0.8"
