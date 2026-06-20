@@ -2,7 +2,7 @@ mod list;
 mod update;
 
 use clap::{Parser, Subcommand};
-use std::{net::IpAddr, path::PathBuf};
+use std::path::PathBuf;
 
 #[derive(Subcommand)]
 pub enum Commands {
