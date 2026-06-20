@@ -16,7 +16,7 @@ async fn upgrade_firmware(
     ip: IpAddr,
     binary: &[u8],
 ) -> anyhow::Result<()> {
-    if binary.len() % 512 != 0 {
+    if !binary.len().is_multiple_of(512) {
         return Err(Error::msg(
             "Failed to read firmware file: firmware file did not align to 512 byte block.",
         ));
