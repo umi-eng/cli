@@ -24,11 +24,11 @@ pub async fn command(
         return Err(Error::msg("No releases found."));
     }
 
-    /// Find the first stable release.
+    // find the first stable release.
     let firmware = if let Some(release) =
         releases.iter().find(|r| !r.draft && !r.prerelease)
     {
-        /// Find firmware file in assets.
+        // find firmware file in assets.
         if let Some(asset) = release.assets.iter().find(|a| {
             a.name.starts_with("umi-adapter-v") && a.name.ends_with(".bin")
         }) {
